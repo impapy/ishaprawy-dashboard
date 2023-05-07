@@ -4,7 +4,14 @@ import Stack from "@mui/material/Stack"
 import Box from "@material-ui/core/Box"
 import Search from "components/Search"
 import Typography from "@mui/material/Typography"
-import { Scalars, Stage, StudentsFilterInput, useAllStudentsQuery, useStudentConfirmeMutation, useStudentDeleteMutation } from "api"
+import {
+  Scalars,
+  Stage,
+  StudentsFilterInput,
+  useAllStudentsQuery,
+  useStudentConfirmeMutation,
+  useStudentDeleteMutation,
+} from "api"
 import SortList from "components/student/SortList"
 import Table, { Column } from "components/Table"
 import Link from "components/Link"
@@ -22,6 +29,8 @@ import DialogConfirm from "components/student/DialogConfirm"
 import Button from "@mui/material/Button"
 import { getErrorMsg } from "util/getError"
 import { useSnackbar } from "notistack"
+import Modal from "components/UI/Modal"
+import StudentForm from "components/student/StudentForm"
 
 const styles = {
   search: {
@@ -34,7 +43,6 @@ const styles = {
   },
 }
 const StudentsPage = () => {
-
   const columns: Column[] = [
     {
       key: "name",
@@ -54,12 +62,6 @@ const StudentsPage = () => {
       type: "text",
     },
     { key: "email", label: "email", type: "text" },
-    // {
-    //   key: "isActive", label: "isActive", type: "text",
-    //   format: (col: any) => {
-    //     return col ? 'true' : 'false'
-    //   }
-    // },
     {
       key: "c",
       label: "isActive",
@@ -73,7 +75,7 @@ const StudentsPage = () => {
       label: "",
       type: "action",
       payload: ({ row }: any) => {
-        return <StudentEdit openmodal={handleOpenStudentForm} _id={row._id} />
+        return <StudentEdit openmodal={() => handleOpenStudentForm(row._id)} _id={row._id} />
       },
     },
     {
@@ -84,12 +86,11 @@ const StudentsPage = () => {
         return <StudentDelete _id={row._id} />
       },
     },
-
   ]
 
   const router = useRouter()
   const [activeButton, setActiveButton] = useState<Stage[]>()
-  const [StudentId, setStudentId] = useState<Scalars['ObjectId']>()
+  const [StudentId, setStudentId] = useState<Scalars["ObjectId"]>()
   const [openStudentForm, setOpenStudentForm] = useState(false)
   const handleOpenStudentForm = (id?: any) => {
     setOpenStudentForm(true)
@@ -105,17 +106,12 @@ const StudentsPage = () => {
     searchTerm: decodeURIComponent(router.query.searchTerm || ""),
     stage: activeButton,
   }
-  const {
-    data,
-    isLoading,
-    isError,
-    error,
-  } = useAllStudentsQuery(
+  const { data, isLoading, isError, error } = useAllStudentsQuery(
     {
       input: {
         perPage: 10,
         page: +router.query.p! || 1,
-        filter: filter
+        filter: filter,
       },
     },
     {
@@ -133,14 +129,14 @@ const StudentsPage = () => {
       <TableSkeleton columns={columns} rows={[{ _id: "1" }, { _id: "2" }, { _id: "3" }, { _id: "4" }, { _id: "5" }]} />
     )
   }
-  console.log(data)
+
   return (
     <Layout title="Students">
       <Stack justifyContent="space-between" direction="row" mb={3}>
         <Typography fontWeight={600} variant="h5">
           Students
         </Typography>
-        <Button variant="contained" color="secondary">
+        <Button variant="contained" color="secondary" onClick={() => handleOpenStudentForm(undefined)}>
           Create new Student
         </Button>
       </Stack>
@@ -152,15 +148,14 @@ const StudentsPage = () => {
       <SortList setActiveButton={setActiveButton} activeButton={activeButton} />
       <Table columns={columns} rows={data?.nodes as any} />
       <TablePagination count={data!.pageInfo.total} />
-
-
+      <Modal open={openStudentForm} onClose={handleCloseStudentForm}>
+        <StudentForm onClose={handleCloseStudentForm} />
+      </Modal>
     </Layout>
   )
 }
 
-
-
-const StudentEdit: React.FC<{ _id: Scalars['ObjectId']; openmodal: (id?: any) => void }> = ({ _id, openmodal }) => {
+const StudentEdit: React.FC<{ _id: Scalars["ObjectId"]; openmodal: (id?: any) => void }> = ({ _id, openmodal }) => {
   return (
     <Tooltip title="Edit Student">
       <IconButton aria-label="Edit Student" onClick={() => openmodal(_id)}>
@@ -170,7 +165,7 @@ const StudentEdit: React.FC<{ _id: Scalars['ObjectId']; openmodal: (id?: any) =>
   )
 }
 
-const StudentDelete: React.FC<{ _id: Scalars['ObjectId'] }> = ({ _id }) => {
+const StudentDelete: React.FC<{ _id: Scalars["ObjectId"] }> = ({ _id }) => {
   const [open, setOpen] = useState(false)
 
   const handleOpen = () => setOpen(true)
@@ -184,16 +179,15 @@ const StudentDelete: React.FC<{ _id: Scalars['ObjectId'] }> = ({ _id }) => {
   const { mutate, isError, isLoading } = useStudentDeleteMutation({
     onSuccess() {
       queryClient.invalidateQueries("AllStudents")
-      enqueueSnackbar("Student Deleted Successfully", { variant: 'success', autoHideDuration: 6000 })
+      enqueueSnackbar("Student Deleted Successfully", { variant: "success", autoHideDuration: 6000 })
       handleClose()
     },
     onError: (error: Error) => {
       enqueueSnackbar(getErrorMsg(error), {
-        variant: 'error',
-        autoHideDuration: 6000
+        variant: "error",
+        autoHideDuration: 6000,
       })
-    }
-
+    },
   })
 
   const handelStudentDlete = () => {
@@ -208,13 +202,20 @@ const StudentDelete: React.FC<{ _id: Scalars['ObjectId'] }> = ({ _id }) => {
         </IconButton>
       </Tooltip>
 
-      <DialogDelete handelStudentDlete={handelStudentDlete} isLoading={isLoading} title='Student' open={open} onOpen={handleOpen} onClose={handleClose} _id={_id} />
+      <DialogDelete
+        handelStudentDlete={handelStudentDlete}
+        isLoading={isLoading}
+        title="Student"
+        open={open}
+        onOpen={handleOpen}
+        onClose={handleClose}
+        _id={_id}
+      />
     </>
   )
 }
 
-
-const StudentConfirm: React.FC<{ _id: Scalars['ObjectId'], confirmed: boolean }> = ({ _id, confirmed }) => {
+const StudentConfirm: React.FC<{ _id: Scalars["ObjectId"]; confirmed: boolean }> = ({ _id, confirmed }) => {
   const [open, setOpen] = useState(false)
 
   const handleOpen = () => setOpen(true)
@@ -227,16 +228,19 @@ const StudentConfirm: React.FC<{ _id: Scalars['ObjectId'], confirmed: boolean }>
   const queryClient = useQueryClient()
   const { mutate, isError, isLoading } = useStudentConfirmeMutation({
     onSuccess() {
-      enqueueSnackbar(`Student ${confirmed ? 'unconfirmed' : 'confirmed'} Successfully`, { variant: 'success', autoHideDuration: 6000 })
+      enqueueSnackbar(`Student ${confirmed ? "unconfirmed" : "confirmed"} Successfully`, {
+        variant: "success",
+        autoHideDuration: 6000,
+      })
       queryClient.invalidateQueries("AllStudents")
       handleClose()
     },
     onError: (error: Error) => {
       enqueueSnackbar(getErrorMsg(error), {
-        variant: 'error',
-        autoHideDuration: 6000
+        variant: "error",
+        autoHideDuration: 6000,
       })
-    }
+    },
   })
 
   const handelStudentStudentConfirme = () => {
@@ -245,18 +249,23 @@ const StudentConfirm: React.FC<{ _id: Scalars['ObjectId'], confirmed: boolean }>
 
   return (
     <>
-      <Tooltip title={'confirme'}>
-        <Button onClick={handleClick} >
-          {confirmed ? 'confirmed' : <Typography color="red">
-            unconfirmed
-          </Typography>}
+      <Tooltip title={"confirme"}>
+        <Button onClick={handleClick}>
+          {confirmed ? "confirmed" : <Typography color="red">unconfirmed</Typography>}
         </Button>
       </Tooltip>
 
-      <DialogConfirm handelStudentConfirm={handelStudentStudentConfirme} isLoading={isLoading} confirm={confirmed} open={open} onOpen={handleOpen} onClose={handleClose} _id={_id} />
+      <DialogConfirm
+        handelStudentConfirm={handelStudentStudentConfirme}
+        isLoading={isLoading}
+        confirm={confirmed}
+        open={open}
+        onOpen={handleOpen}
+        onClose={handleClose}
+        _id={_id}
+      />
     </>
   )
 }
 
 export default StudentsPage
-

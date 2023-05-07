@@ -41,7 +41,6 @@ const ImageUpload: React.FC<Omit<Props, "onFileChange">> = ({ name, label, getIm
 
       if (!res.ok) {
         setUploading(false)
-        console.log("Something went wrong")
         return
       }
 

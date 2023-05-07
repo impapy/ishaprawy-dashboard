@@ -17,11 +17,11 @@ const Richtext = ({ value, onChangeText, name }: Props) => {
   const classes = useStyles()
   const ref = useRef<any>()
 
-  var Image = Quill.import('formats/image')
-  Image.className = 'richTextImage'
+  var Image = Quill.import("formats/image")
+  Image.className = "richTextImage"
   Quill.register(Image, true)
 
-  const imageHandler = useCallback (() => {
+  const imageHandler = useCallback(() => {
     const input = document.createElement("input")
     input.setAttribute("type", "file")
     input.click()
@@ -38,38 +38,39 @@ const Richtext = ({ value, onChangeText, name }: Props) => {
           method: "POST",
           body: fd,
         })
-        
+
         const data: { urls: string[] } = await res.json()
 
         // file type is only image.
         if (/^image\//.test(file.type)) {
-          ref.current.getEditor().insertEmbed(range.index, 'image', data.urls[0])
+          ref.current.getEditor().insertEmbed(range.index, "image", data.urls[0])
         } else {
-          console.warn("You could only upload images.")
+          //
         }
       }
     }
-  },[])
+  }, [])
 
-  const modules = useMemo(()=>({
-
-    toolbar: {
-      container: [
-        [{ header: "1" }, { header: "2" }, { header: [3, 4, 5, 6] }, { font: [] }],
-        [{ size: [] }],
-        ["bold", "italic", "underline", "strike", "blockquote"],
-        [{ list: "ordered" }, { list: "bullet" }],
-        ["link", "image"],
-        ["clean"],
-        [{ align: ''}, {align: 'center'}, {align: 'right'}, {align: 'justify'}],
-        ["code-block"],
-      ],
-      handlers: {
-        image: imageHandler,
+  const modules = useMemo(
+    () => ({
+      toolbar: {
+        container: [
+          [{ header: "1" }, { header: "2" }, { header: [3, 4, 5, 6] }, { font: [] }],
+          [{ size: [] }],
+          ["bold", "italic", "underline", "strike", "blockquote"],
+          [{ list: "ordered" }, { list: "bullet" }],
+          ["link", "image"],
+          ["clean"],
+          [{ align: "" }, { align: "center" }, { align: "right" }, { align: "justify" }],
+          ["code-block"],
+        ],
+        handlers: {
+          image: imageHandler,
+        },
       },
-    },
-
-  }),[])
+    }),
+    [],
+  )
 
   const formats = [
     "header",
@@ -93,8 +94,8 @@ const Richtext = ({ value, onChangeText, name }: Props) => {
   }, [value])
 
   useEffect(() => {
-    ((document.getElementsByClassName("ql-editor") as HTMLCollectionOf<HTMLElement>)[0].style.overflowY = "scroll"),
-    ((document.getElementsByClassName("ql-editor") as HTMLCollectionOf<HTMLElement>)[0].style.height = "300px")
+    ;((document.getElementsByClassName("ql-editor") as HTMLCollectionOf<HTMLElement>)[0].style.overflowY = "scroll"),
+      ((document.getElementsByClassName("ql-editor") as HTMLCollectionOf<HTMLElement>)[0].style.height = "300px")
   }, [])
 
   return (

@@ -1,0 +1,5 @@
+mutation StudentEdit($studentId: ObjectId!, $update: StudentEditInput!) {
+  studentEdit(studentId: $studentId, update: $update) {
+    _id
+  }
+}
