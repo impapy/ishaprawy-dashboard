@@ -1,0 +1,3 @@
+mutation StudentDelete($studentId: ObjectId!) {
+  studentDelete(studentId: $studentId)
+}

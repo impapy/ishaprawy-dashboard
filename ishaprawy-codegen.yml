@@ -1,0 +1,22 @@
+overwrite: true
+schema: http://localhost:3001/graphql
+documents: src/**/*.{ts,tsx,gql}
+generates:
+  src/api/api.generated.ts:
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-react-query
+      - typescript-graphql-request:
+          documentVariableSuffix: "Sdk"
+    config:
+      immutableTypes: true
+      fetcher:
+        func: "./fetcher#fetcher"
+
+  ./graphql.schema.json:
+    plugins:
+      - "introspection"
+# hooks:
+#   afterAllFileWrite:
+#     - yarn format

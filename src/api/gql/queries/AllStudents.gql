@@ -1,0 +1,14 @@
+query AllStudents($input: StudentsGetInput) {
+  students(input: $input) {
+    pageInfo {
+      total
+    }
+    nodes {
+      _id
+      name
+      stage
+      email
+      isActive
+    }
+  }
+}

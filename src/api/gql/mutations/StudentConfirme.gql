@@ -1,0 +1,3 @@
+mutation StudentConfirme($studentId: ObjectId!) {
+  studentConfirmed(studentId: $studentId)
+}

@@ -1,0 +1,11 @@
+mutation Login($credentials: LoginInput!) {
+  login(input: $credentials) {
+    token
+    user {
+      ... on Admin {
+        name
+      }
+    }
+    userType
+  }
+}
