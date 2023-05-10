@@ -43,10 +43,10 @@ const LIST_ITEMS: ListItemProps[] = [
     path: "/students",
   },
   {
-    lightIcon: ShoppingCartLightIcon,
-    darkIcon: ShoppingCartDarkIcon,
-    label: "Orders",
-    path: "/orders",
+    lightIcon: GridLightIcon,
+    darkIcon: GridDarkIcon,
+    label: "Monthly Exames",
+    path: "/monthlyExames",
   },
   {
     lightIcon: IshaprawyLightIcon,

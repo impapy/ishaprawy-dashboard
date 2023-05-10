@@ -1,0 +1,5 @@
+mutation MonthlyExamEdit($monthlyExameId: ObjectId!, $update: MonthlyExameEditInput!) {
+  monthlyExameEdit(monthlyExameId: $monthlyExameId, update: $update) {
+    _id
+  }
+}

@@ -1,0 +1,3 @@
+mutation QuestionRemove($monthlyExameId: ObjectId!, $questionId: ObjectId!) {
+  questionRemove(monthlyExameId: $monthlyExameId, questionId: $questionId)
+}

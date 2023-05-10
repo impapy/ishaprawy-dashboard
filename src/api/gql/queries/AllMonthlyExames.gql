@@ -1,0 +1,17 @@
+query AllMonthlyExames($input: MonthlyExamesGetInput) {
+  monthlyExames(input: $input) {
+    pageInfo {
+      total
+    }
+    nodes {
+      _id
+      stage
+      month
+      solutionExam
+      examMarke
+      questions {
+        _id
+      }
+    }
+  }
+}

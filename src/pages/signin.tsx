@@ -26,8 +26,8 @@ const SignIn: NextPage = () => {
         <Div>
           <ImageGallery
             items={[
-              { original: "/picklegum.png", originalWidth: 265, originalHeight: 227 },
-              { original: "/ishaprawy.png", originalWidth: 336, originalHeight: 126 },
+              { original: "/mrshaprawy.jpg", originalWidth: 500, originalHeight: 500 },
+              { original: "/ishaprawy.jpg", originalWidth: 500, originalHeight: 250 },
             ]}
             autoPlay
             showPlayButton={false}

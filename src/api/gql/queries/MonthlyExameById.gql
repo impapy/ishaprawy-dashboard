@@ -1,0 +1,34 @@
+query MonthlyExame($monthlyExameId: ObjectId!) {
+  monthlyExame(monthlyExameId: $monthlyExameId) {
+    _id
+    stage
+    month
+    solutionExam
+    questions {
+      _id
+      label
+      a {
+        key
+        value
+      }
+      b {
+        key
+        value
+      }
+      c {
+        key
+        value
+      }
+      d {
+        key
+        value
+      }
+      result {
+        key
+        value
+      }
+      marke
+    }
+    examMarke
+  }
+}

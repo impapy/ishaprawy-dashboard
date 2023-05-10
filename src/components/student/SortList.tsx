@@ -21,12 +21,11 @@ const commonStyles = {
   padding: 1,
   borderColor: "#F3F4F8",
 }
-const stages = Object.values(Stage).filter((stage) => stage != Stage.Assistant)
+const stages = Object.values(Stage)
 const SortList: React.FC<{
   setActiveButton: React.Dispatch<React.SetStateAction<Stage[] | undefined>>
   activeButton?: Stage[]
 }> = ({ setActiveButton, activeButton }) => {
-
   return (
     <Card sx={{ padding: 1, marginTop: 2, marginBottom: 1, width: "98.5%", boxShadow: 0 }}>
       <Stack spacing={3} alignItems="center" direction="row" width="90%">
@@ -44,20 +43,21 @@ const SortList: React.FC<{
             All
           </Button>
 
-          {
-            stages.length && stages.map((stage) => <Button key={stage}
-              onClick={() => setActiveButton([stage])}
-              sx={{
-                ...commonStyles,
-                backgroundColor: activeButton?.length && activeButton[0] === stage ? "#E5E5E5" : "#FFFFFF",
-              }}
-            >
-              {capitalize(stage)}
-            </Button>)
-          }
+          {stages.length &&
+            stages.map((stage) => (
+              <Button
+                key={stage}
+                onClick={() => setActiveButton([stage])}
+                sx={{
+                  ...commonStyles,
+                  backgroundColor: activeButton?.length && activeButton[0] === stage ? "#E5E5E5" : "#FFFFFF",
+                }}
+              >
+                {capitalize(stage)}
+              </Button>
+            ))}
         </ButtonGroup>
       </Stack>
-
     </Card>
   )
 }

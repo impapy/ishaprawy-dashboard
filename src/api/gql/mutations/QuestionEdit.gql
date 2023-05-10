@@ -1,0 +1,3 @@
+mutation QuestionEdit($monthlyExameId: ObjectId!, $questionId: ObjectId!, $question: QuestionInput!) {
+  questionEdit(monthlyExameId: $monthlyExameId, questionId: $questionId, question: $question)
+}

@@ -1,0 +1,5 @@
+mutation MonthlyExamAdd ($input: MonthlyExameAddInput!){
+  monthlyExameAdd (input: $input) {
+    _id
+  }
+}

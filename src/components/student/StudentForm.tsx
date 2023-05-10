@@ -16,9 +16,7 @@ import { z } from "zod"
 import { toFormikValidationSchema } from "zod-formik-adapter"
 
 const phoneRegex = /^01[0125][0-9]{8}$/
-const stages = Object.values(Stage)
-  .filter((stage) => stage != Stage.Assistant)
-  .map((stage: Stage) => ({ label: capitalize(stage), value: stage as string }))
+const stages = Object.values(Stage).map((stage: Stage) => ({ label: capitalize(stage), value: stage as string }))
 
 export interface StudentFormProps {
   studentId?: Scalars["ObjectId"]
@@ -28,7 +26,7 @@ export interface StudentFormProps {
 const StudentForm: React.FC<StudentFormProps> = ({ studentId, onClose }) => {
   const { enqueueSnackbar } = useSnackbar()
   const [initialPassword, setInitialPassword] = useState<string>(Math.random().toString(36).slice(-8))
-  
+
   const initialValuesAdd: StudentAddInput = {
     name: "",
     email: "",

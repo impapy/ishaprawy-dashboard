@@ -1,0 +1,3 @@
+mutation MonthlyExamDelete($monthlyExameId: ObjectId!) {
+  monthlyExameDelete(monthlyExameId: $monthlyExameId)
+}
