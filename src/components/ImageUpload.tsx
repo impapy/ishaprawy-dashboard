@@ -9,11 +9,16 @@ import { readPsd } from "ag-psd"
 
 import { centerAll } from "styles/shared"
 import { PlusCircleIcon } from "assets/images/icons"
+import { ContactSupportOutlined } from "@mui/icons-material"
+
+// Import the Cloudinary classes.
+import { fill } from "@cloudinary/url-gen/actions/resize"
+import { CloudinaryImage } from "@cloudinary/url-gen"
 
 interface Props {
   label?: string
   name: string
-  srcURL ?: string
+  srcURL?: string
   getImageUrl?: (image: string) => void
 }
 
@@ -23,30 +28,47 @@ const ImageUpload: React.FC<Omit<Props, "onFileChange">> = ({ name, label, getIm
   const [uploading, setUploading] = useState(false)
   const ref = useRef<HTMLDivElement | undefined>(null)
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Render the image in a React component.
+    // return (
+    //   <div>
+    //     <AdvancedImage cldImg={myImage} />
+    //   </div>
+    // )
+
     const file = e.target.files![0]
     if (!file) return
 
-    const fd = new FormData()
-    fd.append("files", file)
-    ;(async () => {
-      setUploading(true)
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/upload`, {
-        method: "POST",
-        body: fd,
-      })
+    const image = new FormData()
 
-      const data: { urls: string[] } = await res.json()
-      if(getImageUrl) getImageUrl(data.urls[0])
+    image.append("files", file)
+    // const myImage = new CloudinaryImage("sample", {
+    //   cloudName: "dnayvifgg",
+    //   apiKey: "331287636636593",
+    //   apiSecret: "T2b6bo1r6ZvRyrJ8D70n6pEnANM",
+    //   // authToken: undefined,
+    // }).resize(fill().width(100).height(150))
 
-      if (!res.ok) {
-        setUploading(false)
-        return
-      }
+    // console.log(myImage)
+    image.append("upload_preset", "my-upload")
 
+    const res = await fetch(`https://api.cloudinary.com/v1_1/dnayvifgg/image/upload`, {
+      method: "POST",
+      body: image,
+    })
+    // .then((data) => console.log(data))
+    const data = await res.json()
+    console.log(data)
+
+    if (getImageUrl) getImageUrl(data.url)
+
+    if (!data) {
       setUploading(false)
-      helpers.setValue(data.urls[0])
-    })()
+      return
+    }
+
+    setUploading(false)
+    helpers.setValue(data.url)
   }
 
   useEffect(() => {
@@ -58,7 +80,6 @@ const ImageUpload: React.FC<Omit<Props, "onFileChange">> = ({ name, label, getIm
 
       const psd = readPsd(data)
 
-
       psd.canvas!.style.width = `${ref?.current?.clientWidth}px`
       psd.canvas!.style.height = `${ref?.current?.clientHeight}px`
 
@@ -66,11 +87,11 @@ const ImageUpload: React.FC<Omit<Props, "onFileChange">> = ({ name, label, getIm
     })()
   }, [field.value])
 
-  useEffect(()=>{
-    if(srcURL && srcURL?.length > 0){
+  useEffect(() => {
+    if (srcURL && srcURL?.length > 0) {
       helpers.setValue(srcURL)
     }
-  },[srcURL])
+  }, [srcURL])
 
   return (
     <>
